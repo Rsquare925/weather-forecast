@@ -1,3 +1,55 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body{
+	@apply bg-[#e5e3ee];
+}
+
+.btn{
+	@apply p-2 text-xl font-bold text-white;
+}
+
+.input-container{
+	--error: ""
+}
+
+.input-container::after{
+	content: var(--error);
+	@apply text-red-500 p-1;
+}
+
+.or::before,
+.or::after{
+	position: absolute;
+	top:11px;
+	content: "";
+	width: 45%;
+	height: 1px;
+	background: #1A4D2E;
+
+}
+
+.or::after{
+	right: 0;
+}
+
+strong{
+	@apply text-[#E1AFD1];
+}
+
+.card-container{
+	@apply bg-[#AD88C6] p-2  text-white font-semibold sm:p-4 text-center w-[100%] ;
+}
+
+.card-date{
+	@apply mb-4 text-[1.2rem] font-bold md:text-[1.5rem];
+}
+
+.card-icon{
+	@apply  pb-2 text-2xl;
+}
+ 
+.card-date{
+	@apply text-xl;
+}

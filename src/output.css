@@ -554,9 +554,98 @@ video {
   --tw-contain-style:  ;
 }
 
-.bg-\[\#1A4D2E\] {
+.relative {
+  position: relative;
+}
+
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.my-3 {
+  margin-top: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.mt-4 {
+  margin-top: 1rem;
+}
+
+.mt-8 {
+  margin-top: 2rem;
+}
+
+.mt-\[1\.3rem\] {
+  margin-top: 1.3rem;
+}
+
+.flex {
+  display: flex;
+}
+
+.grid {
+  display: grid;
+}
+
+.w-\[100\%\] {
+  width: 100%;
+}
+
+.w-\[90\%\] {
+  width: 90%;
+}
+
+.w-fit {
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
+.max-w-\[1150px\] {
+  max-width: 1150px;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.gap-2 {
+  gap: 0.5rem;
+}
+
+.gap-4 {
+  gap: 1rem;
+}
+
+.border-\[2px\] {
+  border-width: 2px;
+}
+
+.border-red-500 {
+  --tw-border-opacity: 1;
+  border-color: rgb(239 68 68 / var(--tw-border-opacity));
+}
+
+.bg-\[\#7469B6\] {
   --tw-bg-opacity: 1;
-  background-color: rgb(26 77 46 / var(--tw-bg-opacity));
+  background-color: rgb(116 105 182 / var(--tw-bg-opacity));
+}
+
+.bg-\[\#AD88C6\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(173 136 198 / var(--tw-bg-opacity));
+}
+
+.p-3 {
+  padding: 0.75rem;
 }
 
 .p-4 {
@@ -572,11 +661,214 @@ video {
   line-height: 2rem;
 }
 
+.text-\[1rem\] {
+  font-size: 1rem;
+}
+
+.text-xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
 .font-extrabold {
   font-weight: 800;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.text-\[1\.1Srem\] {
+  color: 1.1Srem;
 }
 
 .text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+body {
+  --tw-bg-opacity: 1;
+  background-color: rgb(229 227 238 / var(--tw-bg-opacity));
+}
+
+.btn {
+  padding: 0.5rem;
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  font-weight: 700;
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+.input-container{
+  --error: ""
+
+}
+
+.input-container::after{
+  content: var(--error);
+  padding: 0.25rem;
+  --tw-text-opacity: 1;
+  color: rgb(239 68 68 / var(--tw-text-opacity));
+}
+
+.or::before,
+.or::after{
+  position: absolute;
+  top:11px;
+  content: "";
+  width: 45%;
+  height: 1px;
+  background: #1A4D2E;
+}
+
+.or::after{
+  right: 0;
+}
+
+strong {
+  --tw-text-opacity: 1;
+  color: rgb(225 175 209 / var(--tw-text-opacity));
+}
+
+.card-container {
+  width: 100%;
+  --tw-bg-opacity: 1;
+  background-color: rgb(173 136 198 / var(--tw-bg-opacity));
+  padding: 0.5rem;
+  text-align: center;
+  font-weight: 600;
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+@media (min-width: 640px) {
+  .card-container {
+    padding: 1rem;
+  }
+}
+
+.card-date {
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+@media (min-width: 768px) {
+  .card-date {
+    font-size: 1.5rem;
+  }
+}
+
+.card-icon {
+  padding-bottom: 0.5rem;
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+
+.card-date {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+
+@media (min-width: 640px) {
+  .sm\:col-span-2 {
+    grid-column: span 2 / span 2;
+  }
+
+  .sm\:ml-auto {
+    margin-left: auto;
+  }
+
+  .sm\:grid {
+    display: grid;
+  }
+
+  .sm\:w-\[80\%\] {
+    width: 80%;
+  }
+
+  .sm\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .sm\:gap-4 {
+    gap: 1rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .md\:mt-\[2rem\] {
+    margin-top: 2rem;
+  }
+
+  .md\:text-2xl {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+
+  .md\:text-3xl {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+  }
+
+  .md\:text-\[1\.2rem\] {
+    font-size: 1.2rem;
+  }
+
+  .md\:text-\[1\.8rem\] {
+    font-size: 1.8rem;
+  }
+
+  .md\:text-xl {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .lg\:col-span-1 {
+    grid-column: span 1 / span 1;
+  }
+
+  .lg\:col-span-4 {
+    grid-column: span 4 / span 4;
+  }
+
+  .lg\:row-span-2 {
+    grid-row: span 2 / span 2;
+  }
+
+  .lg\:mt-\[1rem\] {
+    margin-top: 1rem;
+  }
+
+  .lg\:w-\[100\%\] {
+    width: 100%;
+  }
+
+  .lg\:w-\[90\%\] {
+    width: 90%;
+  }
+
+  .lg\:grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  @media (min-width: 1024px) {
+    .lg\:lg\:grid-cols-\[minmax\(300px\2c 1fr\)\2c 1fr\2c 1fr\2c 1fr\2c 1fr\] {
+      grid-template-columns: minmax(300px,1fr) 1fr 1fr 1fr 1fr;
+    }
+  }
+}
+
+@media (min-width: 1280px) {
+  .xl\:grid-cols-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
 }

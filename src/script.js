@@ -1,22 +1,50 @@
-// from datetime import datetime
+const weatherIcons = {
+	clear: "fas fa-sun",
+	clouds: "fas fa-cloud",
+	haze: "fas fa-smog",
+	mist: "fas fa-cloud-showers-heavy",
+	fog: "fas fa-smog",
+	smoke: "fas fa-smog",
+	dust: "fas fa-wind",
+	sand: "fas fa-wind",
+	ash: "fas fa-wind",
+	drizzle: "fas fa-cloud-rain",
+	rain: "fas fa-cloud-showers-heavy",
+	thunderstorm: "fas fa-bolt",
+	snow: "fas fa-snowflake",
+	sleet: "fas fa-cloud-mix",
+	"freezing rain": "fas fa-cloud-rain",
+	"ice pellets": "fas fa-icicles",
+	tornado: "fas fa-wind",
+	squall: "fas fa-wind",
+	blizzard: "fas fa-snowflake",
+	"tropical storm": "fas fa-wind",
+	hurricane: "fas fa-wind",
+};
 
 const apiKey = "d30d34f0e6e041b43eb613163522e666";
+const cityInput = document.getElementById("city-name");
 const currentCity = document.getElementById("current-city-name");
 const currentCityTemp = document.getElementById("current-city-temp");
 const currentCityWind = document.getElementById("current-city-wind");
 const currentCityHumid = document.getElementById("current-city-humid");
+const currentCityWeatherIcon = document.getElementById(
+	"current-city-weather-icon"
+);
+const forecastCity = document.getElementById("forecast-city");
+const inputContainer = document.querySelector(".input-container");
+const currentCityWeather = document.getElementById("current-city-weather");
+const searchBtn = document.getElementById("search-city");
+const useCurrentLocationBtn = document.getElementById("current-location");
 
+// this will give timestamp for next 5 days
 function getDates() {
 	const dateArr = [];
 	let currentDate = new Date();
 	for (let i = 1; i < 6; i++) {
-		let date = currentDate.getDate() + i;
-		let month =
-			currentDate.getMonth() > 9
-				? currentDate.getMonth()
-				: "0" + currentDate.getMonth();
-		let year = currentDate.getFullYear();
-		dateArr.push(`${year}-${month}-${date}`);
+		let nextDate = new Date();
+		nextDate.setDate(currentDate.getDate() + i);
+		dateArr.push(Math.floor(nextDate.getTime() / 1000));
 	}
 
 	return dateArr;
@@ -33,15 +61,20 @@ async function callApi(url) {
 	}
 }
 
+function setWeatherCondition(condition) {
+	currentCityWeather.textContent = condition;
+	condition = condition.toLowerCase();
+	currentCityWeatherIcon.innerHTML = `<i class="${weatherIcons[condition]} md:text-3xl"></i>`;
+}
+
 // this will get current location(lattide and longitude)
-function getLocation(position) {
+async function getLocation(position) {
 	// Get latitude and longitude
 	const latitude = position.coords.latitude;
 	const longitude = position.coords.longitude;
+	const direction = { lat: latitude, lon: longitude };
 
-	// Print or use the latitude and longitude as needed
-	console.log("Latitude:", latitude);
-	console.log("Longitude:", longitude);
+	await cityData("", direction);
 }
 
 // this will handle any error in getting location
@@ -58,31 +91,136 @@ function getLocationError(error) {
 	}
 }
 
-async function delhiData(city) {
-	let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=delhi&appid=${apiKey}&units=metric&cnt=40`;
+async function setForecast(lat, lon) {
+	let currentDate = new Date();
+	let month =
+		currentDate.getMonth() > 9
+			? currentDate.getMonth()
+			: "0" + currentDate.getMonth();
 
-	// apiUrl = `https://api.openweathermap.org/data/3.0/onecall/day_summary?lat=28.6667&lon=77.2167&date=2024-04-13&appid=${apiKey}&units=metric`
+	// this will give next five dates
+	const dateArr = getDates();
+	const cards = document.querySelectorAll(".card-container");
 
-	const data = await callApi(apiUrl);
+	let i = 0;
+	for (let timestamp of dateArr) {
+		let apiUrl = `https://api.openweathermap.org/data/3.0/onecall/timemachine?lat=${lat}&lon=${lon}&dt=${timestamp}&appid=${apiKey}&units=metric`;
+		const data = await callApi(apiUrl);
 
-	currentCity.textContent = data.name;
-	currentCityTemp.textContent = data.main.temp;
-	currentCityWind.textContent = data.wind.speed;
-	currentCityHumid.textContent = data.main.humidity;
+		cards[i].querySelector(".card-date").textContent = `(${
+			currentDate.getDate() + i + 1
+		}-${month}-${currentDate.getFullYear()})`;
+
+		cards[i].querySelector(".card-icon").innerHTML = `<i class="${
+			weatherIcons[data.data[0].weather[0].main.toLowerCase()]
+		}"></i>`;
+
+		cards[i].querySelector(
+			".card-temp"
+		).innerHTML = `Temp: ${data.data[0].temp}\u00B0C`;
+		cards[i].querySelector(
+			".card-wind"
+		).innerHTML = `Wind: ${data.data[0].wind_speed} M/S`;
+		cards[i].querySelector(
+			".card-humidity"
+		).textContent = `Humidity: ${data.data[0].humidity}%`;
+		console.log(apiUrl);
+		i += 1;
+		// break;
+	}
+}
+
+// set the city searched to local storage for showing it in input suggestions
+function setSuggestion(city) {
+	const suggestionListEle = document.getElementById("suggestionsList");
+	const cities = localStorage.getItem("cities");
+
+	if (!cities) {
+		localStorage.setItem("cities", city);
+		suggestionListEle.innerHTML = `<option value="${city}"></option>`;
+	} else {
+		let cities_list = cities.split(" ");
+		console.log("name:", city);
+		console.log(cities_list);
+		if (!cities_list.includes(city)) {
+			cities_list.push(city);
+			console.log(cities_list);
+			localStorage.setItem("cities", cities_list.join(" "));
+		}
+		let suggestionsEle = "";
+		for (let item of cities_list) {
+			suggestionsEle += `<option value="${item}"></option>`;
+		}
+		suggestionListEle.innerHTML = suggestionsEle;
+	}
+}
+
+async function cityData(city = "", direction = {}) {
+	console.log(Object.keys(direction).length);
+	let apiUrl = "";
+	if (city) {
+		apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+	} else if (Object.keys(direction).length !== 0) {
+		console.log(2);
+		apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${direction.lat}&lon=${direction.lon}&appid=${apiKey}&units=metric`;
+	} else {
+		apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=delhi&appid=${apiKey}&units=metric`;
+	}
+
+	let data = await callApi(apiUrl);
+
+	// this is default city if entered city if invalid
+	if (data.cod !== 200) {
+		inputContainer.style.setProperty("--error", `'${data.message}'`);
+		cityInput.classList.add("border-[2px]");
+
+		data = await callApi(
+			`https://api.openweathermap.org/data/2.5/weather?q=delhi&appid=${apiKey}&units=metric`
+		);
+	}
+
+	forecastCity.textContent = `5-Day Forecast of ${data.name}`;
+
+	setSuggestion(data.name);
+
+	let currentDate = new Date();
+	let month =
+		currentDate.getMonth() > 9
+			? currentDate.getMonth()
+			: "0" + currentDate.getMonth();
+	date = `(${currentDate.getDate()}-${month}-${currentDate.getFullYear()})`;
+
+	currentCity.textContent = data.name + date;
+	currentCityTemp.innerHTML = `<strong>Temperature:</strong> ${data.main.temp}\u00B0C`;
+	currentCityWind.innerHTML = `<strong>Wind:</strong> ${data.wind.speed} M/S`;
+	currentCityHumid.innerHTML = `<strong>Humidity:</strong> ${data.main.humidity}%`;
+	setWeatherCondition(data.weather[0].main);
 
 	const lat = data.coord.lat;
 	const lon = data.coord.lon;
-	// this will give next five dates
-	const dateArr = getDates();
-	for (let date of dateArr) {
-		let apiUrl = `https://api.openweathermap.org/data/3.0/onecall/day_summary?lat=${lat}&lon=${lon}&date=${date}&appid=${apiKey}&units=metric`;
-		console.log(apiUrl);
-	}
-	// console.log(lat, lon);
+
+	// setForecast(lat, lon);
 }
 
-delhiData();
+cityData();
 
-navigator.geolocation.getCurrentPosition(getLocation, getLocationError);
+searchBtn.addEventListener("click", async () => {
+	const inputValue = cityInput.value.trim();
 
-// getDates()
+	if (inputValue == "" || inputValue.length < 4) {
+		cityInput.value = "";
+		inputContainer.style.setProperty("--error", "'Input valid city name'");
+		cityInput.classList.add("border-[2px]");
+		console.log("input valid city");
+	} else {
+		inputContainer.style.setProperty("--error", "");
+		cityInput.classList.remove("border-[2px]");
+		await cityData(inputValue);
+	}
+});
+
+// this will set weather forecast according to current location
+useCurrentLocationBtn.addEventListener("click", () => {
+	console.log("erro");
+	navigator.geolocation.getCurrentPosition(getLocation, getLocationError);
+});
