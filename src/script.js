@@ -79,18 +79,34 @@ async function getLocation(position) {
 
 // this will handle any error in getting location
 function getLocationError(error) {
+	const useLocationBtnCotainer = document.getElementById(
+		"current-location-btn-container"
+	);
+
 	// Handle errors
 	if (error.PERMISSION_DENIED) {
-		console.log("User denied the request for Geolocation.");
+		useLocationBtnCotainer.style.setProperty(
+			"--error",
+			"'User denied the request for Geolocation.'"
+		);
 	} else if (error.POSITION_UNAVAILABLE) {
-		console.log("Location information is unavailable.");
+		useLocationBtnCotainer.style.setProperty(
+			"--error",
+			"'Location information is unavailable.'"
+		);
 	} else if (error.TIMEOUT) {
-		console.log("The request to get user location timed out.");
+		useLocationBtnCotainer.style.setProperty(
+			"--error",
+			"'The request to get user location timed out.'"
+		);
 	} else {
-		console.log("An unknown error occurred.");
+		useLocationBtnCotainer.style.setProperty(
+			"--error",
+			"'An unknown error occurred.'"
+		);
 	}
 }
-
+// this will set 5 day forecast
 async function setForecast(lat, lon) {
 	let currentDate = new Date();
 	let month =
@@ -105,8 +121,10 @@ async function setForecast(lat, lon) {
 	let i = 0;
 	for (let timestamp of dateArr) {
 		let apiUrl = `https://api.openweathermap.org/data/3.0/onecall/timemachine?lat=${lat}&lon=${lon}&dt=${timestamp}&appid=${apiKey}&units=metric`;
+
 		const data = await callApi(apiUrl);
 
+		// this is setting data in DOM for particular date
 		cards[i].querySelector(".card-date").textContent = `(${
 			currentDate.getDate() + i + 1
 		}-${month}-${currentDate.getFullYear()})`;
@@ -124,7 +142,7 @@ async function setForecast(lat, lon) {
 		cards[i].querySelector(
 			".card-humidity"
 		).textContent = `Humidity: ${data.data[0].humidity}%`;
-		console.log(apiUrl);
+
 		i += 1;
 		// break;
 	}
@@ -140,11 +158,9 @@ function setSuggestion(city) {
 		suggestionListEle.innerHTML = `<option value="${city}"></option>`;
 	} else {
 		let cities_list = cities.split(" ");
-		console.log("name:", city);
-		console.log(cities_list);
+
 		if (!cities_list.includes(city)) {
 			cities_list.push(city);
-			console.log(cities_list);
 			localStorage.setItem("cities", cities_list.join(" "));
 		}
 		let suggestionsEle = "";
@@ -155,13 +171,13 @@ function setSuggestion(city) {
 	}
 }
 
+// this function will show weather for particular city or (lat and lon)
 async function cityData(city = "", direction = {}) {
-	console.log(Object.keys(direction).length);
 	let apiUrl = "";
+
 	if (city) {
 		apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
 	} else if (Object.keys(direction).length !== 0) {
-		console.log(2);
 		apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${direction.lat}&lon=${direction.lon}&appid=${apiKey}&units=metric`;
 	} else {
 		apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=delhi&appid=${apiKey}&units=metric`;
@@ -177,6 +193,8 @@ async function cityData(city = "", direction = {}) {
 		data = await callApi(
 			`https://api.openweathermap.org/data/2.5/weather?q=delhi&appid=${apiKey}&units=metric`
 		);
+	} else if (data.cod === 200) {
+		cityInput.value = "";
 	}
 
 	forecastCity.textContent = `5-Day Forecast of ${data.name}`;
@@ -188,8 +206,10 @@ async function cityData(city = "", direction = {}) {
 		currentDate.getMonth() > 9
 			? currentDate.getMonth()
 			: "0" + currentDate.getMonth();
+
 	date = `(${currentDate.getDate()}-${month}-${currentDate.getFullYear()})`;
 
+	// setting city data in DOM
 	currentCity.textContent = data.name + date;
 	currentCityTemp.innerHTML = `<strong>Temperature:</strong> ${data.main.temp}\u00B0C`;
 	currentCityWind.innerHTML = `<strong>Wind:</strong> ${data.wind.speed} M/S`;
@@ -199,7 +219,7 @@ async function cityData(city = "", direction = {}) {
 	const lat = data.coord.lat;
 	const lon = data.coord.lon;
 
-	// setForecast(lat, lon);
+	setForecast(lat, lon);
 }
 
 cityData();
@@ -211,7 +231,6 @@ searchBtn.addEventListener("click", async () => {
 		cityInput.value = "";
 		inputContainer.style.setProperty("--error", "'Input valid city name'");
 		cityInput.classList.add("border-[2px]");
-		console.log("input valid city");
 	} else {
 		inputContainer.style.setProperty("--error", "");
 		cityInput.classList.remove("border-[2px]");
@@ -220,7 +239,20 @@ searchBtn.addEventListener("click", async () => {
 });
 
 // this will set weather forecast according to current location
-useCurrentLocationBtn.addEventListener("click", () => {
-	console.log("erro");
-	navigator.geolocation.getCurrentPosition(getLocation, getLocationError);
+useCurrentLocationBtn.addEventListener("click", async () => {
+	const useLocationBtnCotainer = document.getElementById(
+		"current-location-btn-container"
+	);
+	const permissionStatus = await navigator.permissions.query({
+		name: "geolocation",
+	});
+
+	if (permissionStatus.state !== "denied") {
+		navigator.geolocation.getCurrentPosition(getLocation, getLocationError);
+	} else if (permissionStatus.state === "denied") {
+		useLocationBtnCotainer.style.setProperty(
+			"--error",
+			"'Geolocation permission was denied. Please enable it in your browser settings.'"
+		);
+	}
 });

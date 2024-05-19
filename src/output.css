@@ -731,6 +731,17 @@ body {
   right: 0;
 }
 
+#current-location-btn-container{
+  --error: ""
+
+}
+
+#current-location-btn-container::after{
+  content: var(--error);
+  --tw-text-opacity: 1;
+  color: rgb(239 68 68 / var(--tw-text-opacity));
+}
+
 strong {
   --tw-text-opacity: 1;
   color: rgb(225 175 209 / var(--tw-text-opacity));

@@ -34,6 +34,15 @@ body{
 	right: 0;
 }
 
+#current-location-btn-container{
+	--error: ""
+}
+
+#current-location-btn-container::after{
+	content: var(--error);
+	@apply text-red-500;
+}
+
 strong{
 	@apply text-[#E1AFD1];
 }
