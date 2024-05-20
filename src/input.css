@@ -48,7 +48,11 @@ strong{
 }
 
 .card-container{
-	@apply bg-[#AD88C6] p-2  text-white font-semibold sm:p-4 text-center w-[100%] ;
+	@apply bg-[#AD88C6] p-2  text-white font-semibold sm:p-4 text-center w-[100%] md:text-[1rem];
+}
+
+.card-container strong{
+	@apply text-[#7469B6]
 }
 
 .card-date{

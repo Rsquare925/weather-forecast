@@ -21,6 +21,7 @@
 		<main
 			class="w-[90%] mx-auto sm:w-[80%] sm:grid sm:grid-cols-[1fr, 1fr] sm:gap-4 lg:lg:grid-cols-[minmax(300px,1fr),1fr,1fr,1fr,1fr] lg:w-[90%] max-w-[1150px]"
 		>
+			<!-- Input or search section -->
 			<section
 				class="flex flex-col gap-2 mt-4 w-[100%] lg:row-span-2 lg:w-[100%] lg:col-span-1"
 			>
@@ -54,6 +55,8 @@
 					</button>
 				</div>
 			</section>
+
+			<!-- show city weather data for today  -->
 			<section
 				class="current-city mt-8 bg-[#7469B6] p-4 text-[1rem] text-white font-semibold flex justify-between sm:ml-auto lg:col-span-4 w-[100%]"
 			>
@@ -71,6 +74,8 @@
 					<p id="current-city-weather"></p>
 				</div>
 			</section>
+
+			<!-- show 5-day forecast for any city or current location -->
 			<section class="sm:col-span-2 lg:col-span-4">
 				<section
 					class="mt-[1.3rem] flex flex-col gap-4 md:mt-[2rem] lg:mt-[1rem]"

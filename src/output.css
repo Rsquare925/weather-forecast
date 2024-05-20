@@ -764,6 +764,17 @@ strong {
   }
 }
 
+@media (min-width: 768px) {
+  .card-container {
+    font-size: 1rem;
+  }
+}
+
+.card-container strong {
+  --tw-text-opacity: 1;
+  color: rgb(116 105 182 / var(--tw-text-opacity));
+}
+
 .card-date {
   margin-bottom: 1rem;
   font-size: 1.2rem;

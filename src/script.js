@@ -50,6 +50,7 @@ function getDates() {
 	return dateArr;
 }
 
+// this function will call api
 async function callApi(url) {
 	try {
 		const response = await fetch(url);
@@ -135,13 +136,13 @@ async function setForecast(lat, lon) {
 
 		cards[i].querySelector(
 			".card-temp"
-		).innerHTML = `Temp: ${data.data[0].temp}\u00B0C`;
+		).innerHTML = `<strong>Temp:</strong> ${data.data[0].temp}\u00B0C`;
 		cards[i].querySelector(
 			".card-wind"
-		).innerHTML = `Wind: ${data.data[0].wind_speed} M/S`;
+		).innerHTML = `<strong>Wind:</strong> ${data.data[0].wind_speed} M/S`;
 		cards[i].querySelector(
 			".card-humidity"
-		).textContent = `Humidity: ${data.data[0].humidity}%`;
+		).innerHTML = `<strong>Humidity:</strong> ${data.data[0].humidity}%`;
 
 		i += 1;
 		// break;
@@ -153,12 +154,14 @@ function setSuggestion(city) {
 	const suggestionListEle = document.getElementById("suggestionsList");
 	const cities = localStorage.getItem("cities");
 
+	// if there is no suggestions in local storege
 	if (!cities) {
 		localStorage.setItem("cities", city);
 		suggestionListEle.innerHTML = `<option value="${city}"></option>`;
 	} else {
 		let cities_list = cities.split(" ");
 
+		// if the city is not already present in local storage
 		if (!cities_list.includes(city)) {
 			cities_list.push(city);
 			localStorage.setItem("cities", cities_list.join(" "));
